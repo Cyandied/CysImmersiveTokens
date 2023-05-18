@@ -1,0 +1,14 @@
+[
+    {
+        "name": "admin",
+        "password": "admin",
+        "role": "admin",
+        "id": "b21a70ef-ec59-4eed-85ff-81c0a8b7ed2f"
+    },
+    {
+        "name": "user",
+        "password": "user",
+        "role": "user",
+        "id": "b0560d70-a8db-4429-8d0e-004760eb6103"
+    }
+]
