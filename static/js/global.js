@@ -7,11 +7,13 @@ function hideFlash(){
     },200)
 }
 
-flash.addEventListener("click", e=>{
-    hideFlash()
-})
-
-
-setTimeout(()=>{
-    hideFlash()
-},2000)
+if(flash){
+    flash.addEventListener("click", e=>{
+        hideFlash()
+    })
+    
+    
+    setTimeout(()=>{
+        hideFlash()
+    },2000)
+}

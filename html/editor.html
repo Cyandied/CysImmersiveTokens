@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 <form method="post">
+    <div class="image-wrap">
 
+        {% for entry in imgpos %}
+        <img src="/no-change/{{entry[0]}}" alt="" class="image" data-position="{{entry[1]}}">
+        {% endfor %}
+
+    </div>
+
+    <input type="color" name="color-picker" class="color-picker">
 </form>
+<script defer src="/js/editor.js"></script>
 {% endblock %}

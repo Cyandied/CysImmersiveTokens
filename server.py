@@ -4,6 +4,8 @@ from os import listdir, remove
 from os.path import isfile, join
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from backend.classes import *
+from backend.main import *
+import time
 
 
 #Start server:
@@ -18,15 +20,10 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    print("getting json file")
     with open("users.json","r") as f:
         users = json.loads(f.read())
-    print("Checking if user in users")
     for user in users:
-        print("now checking user:", user["name"])
-        print(f'Wanted id {user_id}, found id {user["id"]}')
         if user_id == user["id"]:
-            print("user found in users")
             return User(user["name"], user["password"], user["role"], user["id"])
 
 @app.route("/", methods=["GET", "POST"])
@@ -65,5 +62,42 @@ def home():
 @app.route("/editor", methods=["GET", "POST"])
 @login_required
 def editor():
+    images = listdir("static/no-change")
+    img_pos = []
+    for image in images:
+        _, pos = image.split("_")
+        pos, _ = pos.split(".")
+        img_pos.append([image,pos])
 
-    return render_template("editor.html")
+    return render_template("editor.html", imgpos = img_pos)
+
+@app.route("/alpha", methods=["GET", "POST"])
+@login_required
+def alpha():
+    alpha = listdir("static/alpha")
+    return alpha
+
+@app.route("/modifyAlpha", methods=["GET", "POST"])
+@login_required
+def modifyAlpha():
+    hex = request.get_json()["color"]
+    alpha = listdir("static/alpha")
+    for pic in alpha:
+        if pic != "flask_alpha.png":
+            remove(f'static/alpha/{pic}')
+    newAlpha = changeColor([f'static/alpha/{alpha[0]}'],HEXtoRGB([hex]),1)[0]
+    name = f'{alpha[0].split(".")[0]}_{time.time()}.png'
+    newAlpha.save(f'static/alpha/{name}',"PNG")
+    return {"new-image":f'/alpha/{name}'}
+
+@app.route("/fetchTest", methods=["GET", "POST"])
+@login_required
+def fetchTest():
+    myDict = {
+        "name":"test"
+    }
+    data = request.get_json()
+    print(data)
+
+
+    return data
