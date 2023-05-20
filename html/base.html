@@ -19,8 +19,26 @@
     <link rel="stylesheet" href="/style.css">
     <script defer src="/js/global.js"></script>
 </head>
+<header>
+    <h1>Cy's immersive icons</h1>
+    <div class = "burger">
+        <div class = "click-to-display burger-button" data-id = "burg">menu</div>
+        <div class = "display hidden burger-content hide" data-id = "burg">
+        <ul>
+            <li><a href="/home">home</a></li>
+            <li><a href="/editor">editor</a></li>
+        </ul>
+    </div>
+    </div>
+</header>
+<div class = "devider"></div>
 
 {% block content %}
 {% endblock %}
+
+<footer>
+    made by: Cyandied
+    <a href="https://github.com/Cyandied/CysImmersiveTokens" target="_blank">github-link</a>
+</footer>
 
 </html>

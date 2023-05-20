@@ -1,15 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
-<form method="post">
-    <div class="image-wrap">
 
-        {% for entry in imgpos %}
-        <img src="/no-change/{{entry[0]}}" alt="" class="image" data-position="{{entry[1]}}">
-        {% endfor %}
-
+<form method="post" enctype="multipart/form-data">
+    <div class  ="options">
+        <input type="file" name="images" multiple>
+        <button name="button" value="upload-images">upload images</button>
+        <button name="button" value="purge-images">purge</button>
     </div>
-
-    <input type="color" name="color-picker" class="color-picker">
+    <div class="content">
+        <div class="layer-control">
+            <div>
+                <h4 class="mid">filename</h4>
+                <h4 class="large">bottom -> top</h4>
+                <h4 class="small">is alpha?</h4>
+                <h4 class="small">color-picker</h4>
+            </div>
+            {% for entry in images %}
+            <div>
+                {% set entry_loop = loop %}
+                <div class="mid">{{entry}}</div>
+                <div class="large">
+                    {% for layer in layers %}
+                    <input type="radio" name="{{entry}}" data-layer="{{layer}}" data-image="{{entry}}"
+                        class="layer-control" {% if entry_loop.index is eq(layer) %} checked {% endif %}>
+                    {% endfor %}
+                </div>
+                <div class="small"><input type="checkbox" name="{{entry}}" data-image="{{entry}}" class="is-alpha">
+                </div>
+                <div class="small">
+                    <input type="color" class="color-picker" data-image="{{entry}}" disabled>
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+        <div class="images-wrap">
+            {% for entry in images %}
+            <div class="inner-image" data-image="{{entry}}">
+                <img src="{{userfolder}}\{{entry}}" alt="" class="image">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </form>
 <script defer src="/js/editor.js"></script>
 {% endblock %}
