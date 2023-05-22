@@ -7,6 +7,7 @@ from backend.classes import *
 from backend.main import *
 import numpy as np
 import time
+import werkzeug
 
 
 #Start server:
@@ -18,6 +19,7 @@ ALLOWED_EXTENSIONS = {'png', 'webp'}
 
 app = Flask(__name__, static_url_path="", static_folder="static", template_folder="html")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -84,9 +86,12 @@ def editor():
                             remove(join(userFolder, file))
                 if files and "images" in files:
                     for file in files.getlist("images"):
-                        if allowed_file(file.filename):
+                        if len(file.read()) > 3*1000*1000:
+                            flash(f'Sorry, your file: {file.filename} is too big, the limit is 3 MB per file')
+                        elif allowed_file(file.filename):
                             if not (userFolderExsits):
                                 mkdir(userFolder)
+                            print(file)
                             file.save(join(userFolder, file.filename))
             elif form["button"] == "purge-images":
                 images = listdir(userFolder)
@@ -107,6 +112,8 @@ def editor():
     
     if userFolderExsits:
         uploadedImages = listdir(userFolder)
+        # if uploadedImages:
+        #     normalize(userFolder,uploadedImages)
 
     layers = np.arange(1,len(uploadedImages)+1)
     uploadedImages.sort()

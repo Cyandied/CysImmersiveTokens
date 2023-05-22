@@ -1,6 +1,27 @@
 from PIL import Image as img
 from os.path import join
 
+def getTargetHeightWidth(path:str,filenames:list):
+    hws = []
+    for filename in filenames:
+        file = img.open(join(path,filename))
+        hws.append(file.size)
+    def gettot(hw):
+        return hw[1] + hw[0]
+    hws.sort(key=gettot)
+    return hws[0]
+
+def normalize(path:str,filenames:list):
+    h,w = getTargetHeightWidth(path,filenames)
+
+    for filename in filenames:
+        file = img.open(join(path,filename))
+        fileh, filew = file.size
+        if fileh != h and filew != w:
+            file = file.resize((h,w))
+            file.save(join(path, filename))
+
+
 def changeColor(paths:list, newColors:list):
     alphas = []
     wh = []

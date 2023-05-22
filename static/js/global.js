@@ -15,7 +15,7 @@ if(flash){
     
     setTimeout(()=>{
         hideFlash()
-    },2000)
+    },10000)
 }
 
 const clickToDisplay = document.querySelectorAll(".click-to-display")
