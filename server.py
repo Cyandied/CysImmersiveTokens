@@ -5,6 +5,7 @@ from os.path import isfile, join
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from backend.classes import *
 from backend.main import *
+import numpy as np
 import time
 
 
@@ -35,7 +36,7 @@ def load_user(user_id):
         if user_id == user["id"]:
             return User(user["name"], user["password"], user["role"], user["id"])
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         with open("users.json", "r") as f:
@@ -59,16 +60,15 @@ def login():
     
     return render_template("index.html")
 
-@app.route("/home", methods=["GET", "POST"])
-@login_required
+@app.route("/", methods=["GET", "POST"])
 def home():
-
 
     return render_template("home.html")
 
 @app.route("/editor", methods=["GET", "POST"])
 @login_required
 def editor():
+
     userFolderExsits = session["user"]["id"] in listdir(app.config['UPLOAD_FOLDER'])
     userFolder = join(app.config['UPLOAD_FOLDER'], session["user"]["id"])
     uploadedImages = []
@@ -77,6 +77,11 @@ def editor():
         files = request.files
         if "button" in form:
             if form["button"] == "upload-images":
+                ogs = form.getlist("og-images")
+                if userFolderExsits:
+                    for file in listdir(userFolder):
+                        if file not in ogs:
+                            remove(join(userFolder, file))
                 if files and "images" in files:
                     for file in files.getlist("images"):
                         if allowed_file(file.filename):
@@ -88,41 +93,90 @@ def editor():
                 if images and userFolderExsits:
                     for file in images:
                         remove(join(userFolder, file))
+            elif form["button"] == "purge-top":
+                images = listdir(userFolder)
+                if images and userFolderExsits:
+                    for file in images:
+                        tag = file.split(".")[0].split("_")[-1]
+                        if tag not in ["background","bg"]:
+                            remove(join(userFolder, file))
+            elif "delete-image" in form["button"]:
+                image = form["button"].split("\\")[1]
+                remove(join(userFolder,image))
 
     
     if userFolderExsits:
         uploadedImages = listdir(userFolder)
 
-    return render_template("editor.html",userfolder = userFolder.replace("static",""), images = uploadedImages, layers = np.arange(1,len(uploadedImages)+1))
+    layers = np.arange(1,len(uploadedImages)+1)
+    uploadedImages.sort()
 
-@app.route("/alpha", methods=["GET", "POST"])
-@login_required
-def alpha():
-    alpha = listdir("static/alpha")
-    return alpha
+    return render_template("editor.html",userfolder = userFolder.replace("static",""), images = uploadedImages, layers = layers[::-1])
+
+@app.route("/tutorial", methods=["GET", "POST"])
+def tutorial():
+    path = join("static","images","exsample")
+    exampleImages = listdir(path)
+    zIndexes = [5,4,3,1,2,6]
+    exzs = []
+    names = []
+    for i, image in enumerate(exampleImages):
+        exzs.append([image, zIndexes[i]])
+    
+    for html in listdir(join("html","tutorialParts")):
+        name = html.split(".")[0]
+        if name != "tutorial":
+            names.append(name)
+
+    def get_zIndex(exz):
+        return exz[1]
+    
+    exzs.sort(key = get_zIndex, reverse=True)
+
+    return render_template("tutorialParts/tutorial.html" , path = path.replace("static",""), exz = exzs, names = set(names) )
 
 @app.route("/modifyAlpha", methods=["GET", "POST"])
 @login_required
 def modifyAlpha():
+    t1 = time.time()
+    pixels = 0
     response= request.get_json()
     hex = response["color"]
     image = response["alpha"]
+    name, extention = image.split(".")
     userFolder = join(app.config['UPLOAD_FOLDER'], session["user"]["id"])
     alpha = join(userFolder,image)
-    newAlpha = changeColor([alpha],HEXtoRGB([hex]),1)[0]
-    name, extention = image.split(".")
+
+    for pic in listdir(userFolder):
+        picName = pic.split(".")[0]
+        if picName == "your_icon":
+            remove(join(userFolder,pic))
+        if name in picName and name != picName:
+            remove(join(userFolder,pic))
+
+    newAlpha,wh = changeColor([alpha],HEXtoRGB([hex]))
     name = f'{name}_{time.time()}.{extention}'
-    newAlpha.save(join(userFolder, name),"PNG")
+    newAlpha[0].save(join(userFolder, name),"PNG")
+    t2 = time.time()
+    tdelta = t2-t1
+    ppert = (wh[0]*wh[1])/tdelta
+    print(tdelta,ppert," in seconds")
     return {"new-image":join(userFolder, name).replace("static","")}
 
-@app.route("/fetchTest", methods=["GET", "POST"])
+@app.route("/save", methods=["GET","POST"])
 @login_required
-def fetchTest():
-    myDict = {
-        "name":"test"
-    }
-    data = request.get_json()
-    print(data)
+def save():
+    response= request.get_json()
+    userFolder = join(app.config['UPLOAD_FOLDER'], session["user"]["id"])
+    image = genarateIcon(userFolder, response)
+    image.save(join(userFolder, "your_icon.png"),"PNG")
 
+    return {"link":join(userFolder, "your_icon.png").replace("static","")}
 
-    return data
+@app.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    logout_user()
+    flash(f'You are now logged out! Hope to see you soon, {session["user"]["name"]}')
+    session["user"] = None
+    return redirect(url_for("home"))

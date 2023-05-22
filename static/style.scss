@@ -1,18 +1,30 @@
 // npm run watch
 
 $white : #e3f3ff;
-$black:#161119;
-$darkest:#403e49;
-$dark:#535462;
-$light:#b1abb5;
-$accent:#d38dff;
+$black: #161119;
+$darkest: #403e49;
+$dark: #535462;
+$light: #b1abb5;
+$accent: #d38dff;
+$accent2: #8dffff;
+
+@mixin keyframes($name) {
+    @keyframes #{$name} {
+        @content;
+    }
+}
+
+@mixin animate($animation, $duration, $method, $times) {
+    animation: $animation $duration $method $times;
+}
 
 
 * {
     font-family: 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
 }
 
-body{
+body {
+    margin: 0;
     position: relative;
     background-color: $dark;
     color: $white;
@@ -35,6 +47,129 @@ body{
     transform: translate(0, -40px);
 }
 
+.hidden {
+    display: none !important;
+}
+
+input[type="radio"] {
+    width: 15px;
+}
+
+input[type="checkbox"] {
+    width: 15px;
+}
+
+input,
+button,
+input>button {
+    padding: 2px 5px;
+    accent-color: $accent2;
+    border-radius: 5px;
+    font-size: 15px;
+    border-style: solid;
+    border-width: 2px;
+
+    &[type="color"] {
+        padding: 3px 3px;
+    }
+
+    &:hover {
+        background-color: $accent;
+        backface-visibility: hidden;
+        border-color: $accent;
+    }
+
+    &:disabled {
+        background-color: $dark;
+        border-color: $darkest;
+    }
+}
+
+.collapsed {
+    background-color: transparent!important;
+    transform: translate(0, 0) scale(0.9) rotate3d(0, 0, 0, 0deg)!important;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.timer50ms {
+    -webkit-transition: all 50ms linear;
+    -ms-transition: all 50ms linear;
+    transition: all 50ms linear;
+}
+
+.timer400ms {
+    -webkit-transition: all 400ms linear;
+    -ms-transition: all 400ms linear;
+    transition: all 400ms linear;
+}
+
+$notHover : #c9ffff17;
+$onHover : #cdffff41;
+
+.tutorial-image {
+    background-color: $notHover;
+    border-radius: 30px;
+    right: 50%;
+    top: 5vh;
+    cursor: pointer;
+    position: fixed!important;
+
+    &:nth-child(1) {
+        transform: translate(0, -30%) scale(0.6) rotate3d(-1, -0.3, -0.3, 80deg);
+
+        &:hover {
+            transform: translate(0, -30%) scale(0.7) rotate3d(-1, -0.3, -0.3, 80deg);
+            background-color: $onHover;
+        }
+    }
+
+    &:nth-child(2) {
+        transform: translate(0, -18%) scale(0.6) rotate3d(-1, -0.3, -0.3, 80deg);
+
+        &:hover {
+            transform: translate(0, -18%) scale(0.7) rotate3d(-1, -0.3, -0.3, 80deg);
+            background-color: $onHover;
+        }
+    }
+
+    &:nth-child(3) {
+        transform: translate(0, -5%) scale(0.6) rotate3d(-1, -0.3, -0.3, 80deg);
+
+        &:hover {
+            transform: translate(0, -5%) scale(0.7) rotate3d(-1, -0.3, -0.3, 80deg);
+            background-color: $onHover;
+        }
+    }
+
+    &:nth-child(4) {
+        transform: translate(0, 8%) scale(0.6) rotate3d(-1, -0.3, -0.3, 80deg);
+
+        &:hover {
+            transform: translate(0, 8%) scale(0.7) rotate3d(-1, -0.3, -0.3, 80deg);
+            background-color: $onHover;
+        }
+    }
+
+    &:nth-child(5) {
+        transform: translate(0, 20%) scale(0.6) rotate3d(-1, -0.3, -0.3, 80deg);
+
+        &:hover {
+            transform: translate(0, 20%) scale(0.7) rotate3d(-1, -0.3, -0.3, 80deg);
+            background-color: $onHover;
+        }
+    }
+
+    &:nth-child(6) {
+        transform: translate(0, 30%) scale(0.6) rotate3d(-1, -0.3, -0.3, 80deg);
+
+        &:hover {
+            transform: translate(0, 30%) scale(0.7) rotate3d(-1, -0.3, -0.3, 80deg);
+            background-color: $onHover;
+        }
+    }
+}
+
 .burger {
     width: 10%;
     padding: 10px;
@@ -49,18 +184,21 @@ body{
     padding: 10px;
     width: 100%;
     background-color: $accent;
-    z-index: 10;
+    z-index: 2;
     color: $black;
     font-weight: bold;
+
     &:hover {
         background-color: $white;
     }
 }
 
 .burger-content {
-    position:absolute;
+    position: absolute;
     width: 100%;
     top: 55px;
+    z-index: 1;
+
     ul {
         border-radius: 10px;
         background-color: $light;
@@ -70,23 +208,31 @@ body{
         flex-direction: column;
         align-items: center;
         gap: 5px;
-        &:first-child{
-            border-radius: 0 10px 0 10px;
-        }
     }
 
     li {
+        &:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+
+        &:last-child {
+            border-radius: 0 0 10px 10px;
+        }
+
         display: flex;
         justify-content: center;
         padding: 10px 0;
         width: 100%;
+
         &:hover {
             background-color: $black;
             font-weight: bold;
+
             a {
                 color: $accent;
             }
         }
+
         a {
             color: $black;
             text-decoration: none;
@@ -94,10 +240,27 @@ body{
     }
 }
 
+.text-box {
+    width: 45%;
+    margin: 0 auto;
+    text-align: justify;
+    > div {
+        height: 80vh;
+    }
+}
+
 hr {
     width: 100%;
     color: $accent;
     border-style: solid;
+}
+
+.hv {
+    background-color: $darkest;
+    width: 10px;
+    height: 90vh;
+    position: fixed;
+    left: 50%;
 }
 
 form {
@@ -127,8 +290,15 @@ form {
 
 .images-wrap {
     position: relative;
-    width: 50%;
+    width: 45%;
+    margin: 0 auto;
     pointer-events: none;
+}
+
+.tutorial {
+    display: flex;
+    flex-direction: column;
+    pointer-events: all !important;
 }
 
 .layer-control {
@@ -138,9 +308,10 @@ form {
     flex-direction: column;
     margin: 0 auto;
     gap: 5px;
-    max-height: 100%;
+    max-height: 70%;
     overflow-y: scroll;
     overflow-x: hidden;
+
     >div {
         display: flex;
         flex-direction: row;
@@ -152,21 +323,18 @@ form {
             display: flex;
             justify-content: center;
         }
+
         .mid {
             width: 25%;
             word-break: break-word;
         }
+
         .large {
             width: 45%;
             display: flex;
             justify-content: center;
         }
     }
-}
-
-
-.hidden {
-    display: none;
 }
 
 .flash {
@@ -183,7 +351,7 @@ form {
     background-color: $accent;
     color: $black;
     padding: 10px;
-    top: 0;
+    top:10vh;
     left: 0;
     right: 0;
 }
@@ -197,36 +365,96 @@ footer {
     color: $white;
     background-color: $darkest;
     padding: 0;
-    bottom:0;
-    right:0;
-    left:0;
+    bottom: 0;
+    right: 0;
+    left: 0;
     margin: 0;
     position: fixed;
-    height: 30px;
+    height: 3vh;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    a {
-        color: $accent;
+    z-index: 2000000;
+}
+
+a {
+    color: $accent;
+}
+
+.editorChooser{
+    position: absolute;
+    background-color: $notHover;
+    &:hover {
+        background-color: $onHover;
     }
 }
 
 header {
     color: $white;
     position: fixed;
+    z-index: 2000000;
     margin: 0;
     background-color: $darkest;
-    top:0;
-    right:0;
-    left:0;
-    height: 100px;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 10vh;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
 }
 
-.devider {
-    height: 100px;
+.loading {
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    gap: 5px;
+    font-weight: bold;
+    top: 80px;
+
+    .dot {
+        height: 15px;
+        width: 15px;
+        border-radius: 10px;
+        background-color: $accent;
+
+        &:first-child,
+        &:last-child {
+            animation-delay: 0.5s;
+        }
+
+        &:nth-child(2),
+        &:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        @include keyframes(load) {
+            0% {
+                width: 15px;
+                height: 15px;
+                background-color: $accent;
+            }
+
+            50% {
+                width: 15%;
+                height: 10px;
+                background-color: $accent2;
+            }
+
+            100% {
+                width: 15px;
+                height: 15px;
+                background-color: $accent;
+            }
+        }
+
+        @include animate(load, 2s, linear, infinite)
+    }
 }

@@ -5,37 +5,52 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cy's immersive tokens</title>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="flash">
-        {% for message in messages %}
-        <span style="font-weight: bold;">{{ message }}</span>
-        click to dismiss
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
+    <title>Cy's Immersive Tokens</title>
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/generic.css">
     <script defer src="/js/global.js"></script>
 </head>
 <header>
-    <h1>Cy's immersive icons</h1>
+    <h1>Cy's Immersive Tokens</h1>
     <div class = "burger">
         <div class = "click-to-display burger-button" data-id = "burg">menu</div>
         <div class = "display hidden burger-content hide" data-id = "burg">
         <ul>
-            <li><a href="/home">home</a></li>
+            <li><a href="/">home</a></li>
+            <li><a href="/tutorial">tutorials</a></li>
+            {% if session["user"] %}
             <li><a href="/editor">editor</a></li>
+            <li><a href="/logout">log-out</a></li>
+            {% else %}
+            <li><a href="/login">editor</a></li>
+            <li><a href="/login">log-in</a></li>
+            {% endif %}
         </ul>
     </div>
     </div>
+    <div class = "loading hidden">
+        <div class = "dot"></div>
+        <div class = "dot"></div>
+        <div class = "dot"></div>
+        <div class = "dot"></div>
+        <div class = "dot"></div>
+    </div>
 </header>
-<div class = "devider"></div>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash">
+    {% for message in messages %}
+    <span style="font-weight: bold;">{{ message }}</span>
+    click to dismiss
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<div style="height: 10vh;"></div>
 
 {% block content %}
 {% endblock %}
-
 <footer>
     made by: Cyandied
     <a href="https://github.com/Cyandied/CysImmersiveTokens" target="_blank">github-link</a>

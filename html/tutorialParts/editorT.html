@@ -1,0 +1,112 @@
+<h1>How exactly do I use the editor?</h1>
+<h2>UI explaination</h2>
+<div style="position: relative;">
+    <div class="editorChooser click-to-display" data-id="image-uploader"
+        style="width: 17%;height: 4%;top: 10%;left: 1%;"></div>
+
+    <div class="editorChooser click-to-display" data-id="upload-images-button"
+        style="width: 7%;height: 4%;top: 10%;left: 17%;"></div>
+
+    <div class="editorChooser click-to-display" data-id="purge" style="width: 3%;height: 4%;top: 10%;left: 24%;"></div>
+
+    <div class="editorChooser click-to-display" data-id="purge-top" style="width: 5%;height: 4%;top: 10%;left: 27%;">
+    </div>
+
+    <div class="editorChooser click-to-display" data-id="download" style="width: 4%;height: 4%;top: 10%;left: 32%;">
+    </div>
+
+    <div class="editorChooser click-to-display" data-id="filenames" style="width: 13%;height: 32%;top: 16%;left: 1%;">
+    </div>
+
+    <div class="editorChooser click-to-display" data-id="layers" style="width: 23%;height: 32%;top: 16%;left: 14%;">
+    </div>
+
+    <div class="editorChooser click-to-display" data-id="is-alpha" style="width: 7%;height: 32%;top: 16%;left: 37%;">
+    </div>
+
+    <div class="editorChooser click-to-display" data-id="color-picker"
+        style="width: 8%;height: 32%;top: 16%;left: 44%;"></div>
+
+    <div class="editorChooser click-to-display" data-id="your-token" style="width: 45%;height: 79%;top: 16%;left: 55%;">
+    </div>
+
+    <img src="images/editorUI.png" alt="" style="width: 100%;">
+</div>
+<div>
+    <div data-id="image-uploader" class="display hide hidden">
+        <h4>image upload input</h4>
+        This is where you begin, press this to select all images you wish to import into the editor and work with.
+        Dont worry if you forget something, you can import images several times during the editing process.
+    </div>
+    <div data-id="upload-images-button" class="display hide hidden">
+        <h4>upload images button</h4>
+        When you press this, your selected images will be imported into the editor, beware, this will also reset all
+        images currently in the editor.
+        This is done to keep the editor neat and as small as possible, I only have so much server space :/
+    </div>
+    <div data-id="purge" class="display hide hidden">
+        <h4>purge all images</h4>
+        This button will permanently remove all images from the editor, please press this button before leaving the
+        editor and beware that the entire site will burge itself once a week on sunday CET 00:00:00, so make sure to
+        save any projects before then.
+        There will also be a live countdown on the home page when we are within 24 hours of the purge.
+    </div>
+    <div data-id="purge-top" class="display hide hidden">
+        <h4>purge top images</h4>
+        This button will purge all images that <strong>do not</strong> end with _bg or _background in thier filename,
+        use this to easily start working on a new token while keeping the background elements loaded.
+    </div>
+    <div data-id="download" class="display hide hidden">
+        <h4>download button</h4>
+        This button will automatically combine all images and promt you with a download. Make sure you have automatic
+        download turned off in your browser.
+        As a standard, the token will be named "your-token.png" so you can always find it on your pc.
+    </div>
+    <div data-id="filenames" class="display hide hidden">
+        <h4>your filenames</h4>
+        This column displays the names of the files you uploaded, so it is up to you to ensure that you can easily
+        diffirentiate them.
+        If you need help, cosult my personal naming guide outlined at the start screen, press "back to start" at the top
+        to go back to that page.
+        <br>
+        Pressing the del button removed that specefic file, and leaves the rest intact.
+    </div>
+    <div data-id="layers" class="display hide hidden">
+        <h4>layers</h4>
+        This column displays the layers as radio buttons, there will always be as many layers as there are images, so if
+        you uplaod a looot of images, this may get a tad messy.
+        The layers are ordered so that the left most radio button represents the bottom layer, and the right most button
+        represents the top layer.
+        Two images can be on the same layer, in wich case it is the raw HTML positioning that decides which is on top
+        and I cannot guarentee that the downloaded image will be the same as the one displayed.
+        So it is my reccomendation that two images do not share a layer.
+        <br>
+        To make layering easier for you, by making it almost automatic, stick a number or a letter at the very beginning
+        of the filename, where 1,a is the very top layer.
+        Then the editor will automatically sort your layers in the correct order.
+    </div>
+    <div data-id="is-alpha" class="display hide hidden">
+        <h4>is the layer an alpha</h4>
+        This is where you check off wather your layer is an alpha (meaning you wish the change its color) or not, if
+        this field is not ticked, the color-picker for that layer will be disabled.
+    </div>
+    <div data-id="color-picker" class="display hide hidden">
+        <h4>color-picker</h4>
+        This is where you pick your color for your alpha layer, the field will <strong>only</strong> be active if the
+        associated layer is marked as an alpha layer.
+        This is just the standard HTML color-picker, possibly more to come here...
+    </div>
+    <div data-id="your-token" class="display hide hidden">
+        <h4>your token</h4>
+        This is where your gorgeous token will be displayed! Sometimes this display with lag behind a tag if your token
+        has a very high resolution, generally, everything will take longer if your token has a high resolution, but that
+        will just give you all the more time to admire my costum made laoding bar that I made myself!.
+    </div>
+</div>
+<h2>tips, tricks, and despretate pleas from a small developer</h2>
+<ol>
+    <li><strong>Please</strong> make sure to press purge after you have finished using the editor, I fully rely on you
+        to keep your own lille space on my server clean and neat untill I find a good automatic cleaning method!</li>
+    <li>When using the editor, reloading the page can result in weird artifacts (in the form of extra, weirdly named, layers) from the re-coloring process, to get rid
+        of them, just delete them, it wont break anything.</li>
+</ol>

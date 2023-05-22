@@ -6,19 +6,21 @@
         <input type="file" name="images" multiple>
         <button name="button" value="upload-images">upload images</button>
         <button name="button" value="purge-images">purge</button>
+        <button name="button" value="purge-top">purge top</button>
+        <button type="button" id="download">download</button>
     </div>
     <div class="content">
         <div class="layer-control">
             <div>
                 <h4 class="mid">filename</h4>
-                <h4 class="large">bottom -> top</h4>
+                <h4 class="large">bottom &rarr; top</h4>
                 <h4 class="small">is alpha?</h4>
                 <h4 class="small">color-picker</h4>
             </div>
             {% for entry in images %}
             <div>
                 {% set entry_loop = loop %}
-                <div class="mid">{{entry}}</div>
+                <div class="mid"><button name="button" value="delete-image\{{entry}}">del</button> {{entry.split(".")[0]}}<input type="text" name = "og-images" value="{{entry}}" class="hidden"></div>
                 <div class="large">
                     {% for layer in layers %}
                     <input type="radio" name="{{entry}}" data-layer="{{layer}}" data-image="{{entry}}"

@@ -35,7 +35,7 @@ function forceZindex() {
         const assImage = layerSelected.dataset.image
         images.forEach(image => {
             if (image.dataset.image == assImage && layerSelected.checked) {
-                image.style.zIndex = zIndex
+                image.style.zIndex = -zIndex
             }
         })
     })
@@ -49,7 +49,7 @@ layverControl.forEach(layerSelected => {
         const assImage = e.target.dataset.image
         images.forEach(image => {
             if (image.dataset.image == assImage && layerSelected.checked) {
-                image.style.zIndex = zIndex
+                image.style.zIndex = -zIndex
             }
         })
     })
@@ -83,9 +83,11 @@ alphaControl.forEach(alphaController => {
 
 
 const wrapper = document.querySelector(".images-wrap")
+const loading = document.querySelector(".loading")
 
 colors.forEach(color => {
     color.addEventListener("change", async (e) => {
+        loading.classList.remove("hidden")
         const color = e.target.value
         const alpha = e.target.dataset.image
         const newimage = await poster("modifyAlpha",
@@ -94,7 +96,6 @@ colors.forEach(color => {
                 "alpha": alpha
             }
         )
-        const images = wrapper.querySelectorAll(".inner-image")
         for (const image of images) {
             if (image.dataset.image == alpha) {
                 image.innerHTML = ""
@@ -104,9 +105,24 @@ colors.forEach(color => {
                 image.appendChild(insertImage)
             }
         }
+        loading.classList.add("hidden")
+    })    })
+
+const download = document.querySelector("#download")
+
+download.addEventListener("click",async (e)=> {
+    const toSend = []
+    images.forEach(image =>{
+        const toAppend = {}
+        const temp = image.querySelector("img").src.split("/")
+        toAppend["name"] = temp[temp.length-1]
+        toAppend["z-index"] = +image.style.zIndex
+        toSend.push(toAppend)
     })
+    const downloadLink = await poster("save",toSend)
+    const link = document.createElement("a")
+    link.href = downloadLink.link
+    link.download = "you-done-it"
+    link.click()
 })
-
-
-
 

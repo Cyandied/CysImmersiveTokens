@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content" style="width: 90%; margin: 0 auto;">
+    <div class="images-wrap tutorial">
+        {% for image in exz %}
+        {% set name = image[0].split(".")[0].split("_")[1] %}
+        <div data-part="{{name}}" class="tutorial-button tutorial-image inner-image collapsed timer400ms" data-layer="{{image[1]}}">
+            <img src="{{path}}\{{image[0]}}" class="image">
+        </div>
+        {% endfor %}
+    </div>
+    <div class="hv"></div>
+    <div class="text-box">
+        <span data-part = "editorT"><button type="button" class="tutorial-button">editor tutorial</button></span>
+        <span data-part = "start"><button type="button" class="tutorial-button">back to start</button></span>
+        
+        <div class="text-wrapper" data-part="start">
+            {% include 'tutorialParts/start.html' %}
+        </div>
+        {% for name in names %}
+        {% set path = ["tutorialParts/",name,".html"] %}
+        <div class="text-wrapper hidden" data-part="{{name}}">
+            {% include path|join("") %}
+            <div style="height: 4vh;"></div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+<script defer src="/js/tutorial.js"></script>
+{% endblock %}
