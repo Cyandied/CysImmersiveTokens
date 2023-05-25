@@ -1,4 +1,4 @@
-const images = document.querySelectorAll(".inner-image")
+const images = document.querySelectorAll(".inner-image-tutorial")
 
 function forceZindex(){
     images.forEach(image =>{

@@ -86,8 +86,8 @@ input>button {
 }
 
 .collapsed {
-    background-color: transparent!important;
-    transform: translate(0, 0) scale(0.9) rotate3d(0, 0, 0, 0deg)!important;
+    background-color: transparent !important;
+    transform: translate(0, 0) scale(0.9) rotate3d(0, 0, 0, 0deg) !important;
     border-radius: 30px;
     cursor: pointer;
 }
@@ -113,7 +113,7 @@ $onHover : #cdffff41;
     right: 50%;
     top: 5vh;
     cursor: pointer;
-    position: fixed!important;
+    position: fixed !important;
 
     &:nth-child(1) {
         transform: translate(0, -30%) scale(0.6) rotate3d(-1, -0.3, -0.3, 80deg);
@@ -210,33 +210,42 @@ $onHover : #cdffff41;
         gap: 5px;
     }
 
-    li {
-        &:first-child {
-            border-radius: 10px 10px 0 0;
-        }
-
-        &:last-child {
-            border-radius: 0 0 10px 10px;
-        }
-
-        display: flex;
-        justify-content: center;
-        padding: 10px 0;
+    a {
+        color: $black;
+        text-decoration: none;
         width: 100%;
 
-        &:hover {
-            background-color: $black;
-            font-weight: bold;
-
-            a {
-                color: $accent;
+        &:first-child {
+            li {
+                border-radius: 10px 10px 0 0;
             }
         }
 
-        a {
-            color: $black;
-            text-decoration: none;
+        &:last-child {
+            li {
+                border-radius: 0 0 10px 10px;
+            }
         }
+
+        li {
+
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            width: 100%;
+        }
+
+        &:hover {
+            color: $accent;
+
+            li {
+                background-color: $black;
+                font-weight: bold;
+
+            }
+        }
+
+
     }
 }
 
@@ -244,7 +253,8 @@ $onHover : #cdffff41;
     width: 45%;
     margin: 0 auto;
     text-align: justify;
-    > div {
+
+    >div {
         height: 80vh;
     }
 }
@@ -268,6 +278,10 @@ form {
     margin: 0 auto;
 }
 
+.inner-image-tutorial {
+    position: absolute;
+}
+
 .inner-image {
     width: 100%;
     position: absolute;
@@ -285,6 +299,11 @@ form {
     flex-direction: row;
     width: 100%;
     height: 80vh;
+}
+
+.br{
+    display: block;
+    margin-bottom: 1em;
 }
 
 .options {
@@ -311,7 +330,7 @@ form {
     flex-direction: column;
     margin: 0 auto;
     gap: 5px;
-    max-height: 70%;
+    max-height: 95%;
     overflow-y: scroll;
     overflow-x: hidden;
 
@@ -354,7 +373,7 @@ form {
     background-color: $accent;
     color: $black;
     padding: 10px;
-    top:10vh;
+    top: 10vh;
     left: 0;
     right: 0;
 }
@@ -385,9 +404,10 @@ a {
     color: $accent;
 }
 
-.editorChooser{
+.editorChooser {
     position: absolute;
     background-color: $notHover;
+
     &:hover {
         background-color: $onHover;
     }

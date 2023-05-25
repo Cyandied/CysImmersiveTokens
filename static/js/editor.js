@@ -126,3 +126,21 @@ download.addEventListener("click",async (e)=> {
     link.click()
 })
 
+const packSelector = document.querySelector("#token-pack-selector")
+const tokenSelector = document.querySelector("#tokens")
+const options = tokenSelector.querySelectorAll("option")
+
+packSelector.addEventListener("change", e=> {
+    options.forEach(option => {
+        assPack = option.dataset.pack
+        targetPack = packSelector.value
+        option.classList.add("hidden")
+        if(targetPack == "all" || assPack == targetPack){
+            option.classList.remove("hidden")
+        }
+        if(assPack == "select"){
+            option.selected = true
+            option.classList.remove("hidden")
+        }
+    })
+})

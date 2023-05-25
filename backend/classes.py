@@ -2,11 +2,12 @@ import uuid
 import json
 
 class User():
-    def __init__(self, name, password,role="user", id = None) -> None:
+    def __init__(self, name, password,role="user", id = None, packs = []) -> None:
         self.name = name
         self.password = password
         self.role = role
         self.id = id or str(uuid.uuid4())
+        self.packs = packs or [] 
     def to_json(self):        
         return {"name": self.name}
 

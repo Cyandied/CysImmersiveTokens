@@ -12,26 +12,50 @@ To create a finished token like the one to the left, I needed 6 layers.
 </ul>
 
 To see the separation, click the token, and it will split up like a burger.
-I have made a few decesions here, for starters, i have decided to collect any static coloring (shadows, highlight, other) in one layer with the line-art.
+I have made a few decesions here, for starters, i have decided to collect any static coloring (shadows, highlight,
+other) in one layer with the line-art.
 This is a way to control the amount of layers you are working with.
-
-I also decided to separate my two background elements, glow and background. This is so I can easily reuse the same background for several different tokens.
-<br>
-To learn more about how to format any of the layers, simply click it, and I'll tell you a bit more in deltail how you should go about making them.
+<span class = "br"></span>
+I also decided to separate my two background elements, glow and background. This is so I can easily reuse the same
+background for several different tokens.
+<span class = "br"></span>
+To learn more about how to format any of the layers, simply click it, and I'll tell you a bit more in deltail how you
+should go about making them.
 <h2>Naming conventions</h2>
-If you plan to use this service for a large amount of tokens, save yourself some pain and stick to a rigid naming scheme, I reccomend:
+If you plan to use this service for a large amount of tokens, save yourself some pain and stick to a rigid naming
+scheme, I reccomend:
+<span class = "br"></span>
+numberLetter_name_layertype_discription.extension
+<span class = "br"></span>
+The number in the front is representative of the overall layer the image will be placed on, I usually place token
+backgrounds on layer 9, and token borders on layer 1, and then fill out everything in between.
+<span class = "br"></span>
+The letter after the number represents the position of the image within thier layer. I usually place all alphas on the
+same layer (layer 5) so I will use A-Z to determine which alpha should be displayed on top.
+<span class = "br"></span>
+Here is how the layers of the stone on the left is named:
 <ul>
-    <li>example_lines_static.extention</li>
-    <li>example_alpha_A.extention</li>
-    <li>example_alpha_B.extention</li>
-    <li>example_alpha_C.extention</li>
-    <li>example_glow.extention</li>
-    <li>basic_background.extention</li>
+    <li>2A_stone_smooth_static.png</li>
+    <li>5A_stone_smooth_alpha_details.png</li>
+    <li>5B_stone_smooth_alpha_stripes.png</li>
+    <li>5C_stone_smooth_alpha_base.png</li>
+    <li>8A_stone_smooth_glow.png</li>
+    <li>9A_orange_bg.png</li>
 </ul>
-It is clear what is what, the order of the alpahs are nicely seprated via the alphabet (top A &rarr; Z bottom), and my basic background, which I am planning to reuse many times, 
+It is clear what is what, the order of the alpahs are nicely seprated via the alphabet (top A &rarr; Z bottom), and my
+orange background, which I am planning to reuse many times,
 is easily dicrnable so you dont accidentally purge it.
-<br>
-As an extra help, make absolutely sure you name the background with the _background or _bg added on <strong>at the very end</strong> of its filename. 
+<span class = "br"></span>
+As an extra help, make absolutely sure you name the background with the _background_ or _bg_ added in its filename (_bg and _background if it is at the end).
 Then it will remain in the editor after pressing "purge top".
-<br>
-When uploading images, <strong>ensure that they are the same size, all of them!</strong> Else the whole editor breaks...
+<span class = "br"></span>
+When uploading images, if there does not exsist a file with the _bg or _background, all files will be forcebly set to
+the same dimentions as the smallest image you have uploaded. In the case that you have uploaded a _bg or _background
+image, all images will be sized after the smallest of those (if there happens to be more then one).
+<span class = "br"></span>
+<strong>If you have specefic dimentions for your token, you can input that in the "size" field in the editor, this will
+    take priority over all other forced sizing I have implemented.</strong>
+<span class = "br"></span>
+It is very important that all images have the same size, else you will not be albe to download the image, that is why I
+must implement stuff like this. I am currently looking into other methods for image manipulation with python, I am
+currently using Pillow and it is quite slow, so this might change in the future.

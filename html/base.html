@@ -16,14 +16,14 @@
         <div class = "click-to-display burger-button" data-id = "burg">menu</div>
         <div class = "display hidden burger-content hide" data-id = "burg">
         <ul>
-            <li><a href="/">home</a></li>
-            <li><a href="/tutorial">tutorials</a></li>
+            <a href="/"><li>home</li></a>
+            <a href="/tutorial"><li>tutorials</li></a>
             {% if session["user"] %}
-            <li><a href="/editor">editor</a></li>
-            <li><a href="/logout">log-out</a></li>
+            <a href="/editor"><li>editor</li></a>
+            <a href="/logout"><li>log-out</li></a>
             {% else %}
-            <li><a href="/login">editor</a></li>
-            <li><a href="/login">log-in</a></li>
+            <a href="/login"><li>editor</li></a>
+            <a href="/login"><li>log-in</li></a>
             {% endif %}
         </ul>
     </div>

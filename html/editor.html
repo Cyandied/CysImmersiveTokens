@@ -2,12 +2,42 @@
 {% block content %}
 
 <form method="post" enctype="multipart/form-data">
-    <div class  ="options">
+    <div class="options">
         <input type="file" name="images" multiple>
         <button name="button" value="upload-images">upload images</button>
         <button name="button" value="purge-images">purge</button>
         <button name="button" value="purge-top">purge top</button>
         <button type="button" id="download">download</button>
+        <select id="token-pack-selector">
+            <option value="all" selected>all token packs</option>
+            {% for pack in userpacks %}
+            <option value="{{pack}}">{{pack}}</option>
+            {% endfor %}
+        </select>
+        <select name="tokens" id="tokens">
+            <option value="" data-pack="select" selected>no token selected</option>
+            {% for pack in userpacks %}
+            {% for token in userpacks[pack] %}
+            <option value="{{pack}},{{token}}" data-pack="{{pack}}">{{token}}</option>
+            {% endfor %}
+            {% endfor %}
+        </select>
+        <select name="backgrounds">
+            <option value="" selected>no background selected</option>
+            {% for bg in bgs %}
+            <option value="{{bg}}">{{bg.split(".")[0].split("_")[1]}}</option>
+            {% endfor %}
+        </select>
+        <select name="borders">
+            <option value="" selected>no border selected</option>
+            {% for border in borders %}
+            <option value="{{border}}">{{border.split(".")[0].split("_")[1]}}</option>
+            {% endfor %}
+        </select>
+        <button name="button" value="load">load</button>
+        Dimentions:
+        <input type="text" name="h" placeholder="height" value = "{{hw[0]}}"> / <input type="text" name="w" placeholder="width" value = "{{hw[1]}}">
+        <button>update</button>
     </div>
     <div class="content">
         <div class="layer-control">
@@ -20,17 +50,21 @@
             {% for entry in images %}
             <div>
                 {% set entry_loop = loop %}
-                <div class="mid"><button name="button" value="delete-image\{{entry}}">del</button> {{entry.split(".")[0]}}<input type="text" name = "og-images" value="{{entry}}" class="hidden"></div>
+                {% set name = entry.split(".")[0] %}
+                {% set tags = name.split("_") %}
+                <div class="mid"><button name="button" value="delete-image\{{entry}}">del</button> {{name}}</div>
                 <div class="large">
                     {% for layer in layers %}
                     <input type="radio" name="{{entry}}" data-layer="{{layer}}" data-image="{{entry}}"
                         class="layer-control" {% if entry_loop.index is eq(layer) %} checked {% endif %}>
                     {% endfor %}
                 </div>
-                <div class="small"><input type="checkbox" name="{{entry}}" data-image="{{entry}}" class="is-alpha">
+                <div class="small"><input type="checkbox" name="{{entry}}" data-image="{{entry}}" class="is-alpha" {%
+                        if "alpha" in tags %}checked{% endif %}>
                 </div>
                 <div class="small">
-                    <input type="color" class="color-picker" data-image="{{entry}}" disabled>
+                    <input type="color" class="color-picker" data-image="{{entry}}" {% if "alpha" not in tags
+                        %}disabled{% endif %}>
                 </div>
             </div>
             <hr>

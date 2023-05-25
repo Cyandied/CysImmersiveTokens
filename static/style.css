@@ -175,28 +175,29 @@ input > button:disabled {
   align-items: center;
   gap: 5px;
 }
-.burger-content li {
+.burger-content a {
+  color: #161119;
+  text-decoration: none;
+  width: 100%;
+}
+.burger-content a:first-child li {
+  border-radius: 10px 10px 0 0;
+}
+.burger-content a:last-child li {
+  border-radius: 0 0 10px 10px;
+}
+.burger-content a li {
   display: flex;
   justify-content: center;
   padding: 10px 0;
   width: 100%;
 }
-.burger-content li:first-child {
-  border-radius: 10px 10px 0 0;
-}
-.burger-content li:last-child {
-  border-radius: 0 0 10px 10px;
-}
-.burger-content li:hover {
-  background-color: #161119;
-  font-weight: bold;
-}
-.burger-content li:hover a {
+.burger-content a:hover {
   color: #d38dff;
 }
-.burger-content li a {
-  color: #161119;
-  text-decoration: none;
+.burger-content a:hover li {
+  background-color: #161119;
+  font-weight: bold;
 }
 
 .text-box {
@@ -227,6 +228,10 @@ form {
   margin: 0 auto;
 }
 
+.inner-image-tutorial {
+  position: absolute;
+}
+
 .inner-image {
   width: 100%;
   position: absolute;
@@ -244,6 +249,11 @@ form {
   flex-direction: row;
   width: 100%;
   height: 80vh;
+}
+
+.br {
+  display: block;
+  margin-bottom: 1em;
 }
 
 .options {
@@ -270,7 +280,7 @@ form {
   flex-direction: column;
   margin: 0 auto;
   gap: 5px;
-  max-height: 70%;
+  max-height: 95%;
   overflow-y: scroll;
   overflow-x: hidden;
 }
