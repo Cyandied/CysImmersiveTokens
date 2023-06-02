@@ -8,6 +8,7 @@ from backend.main import *
 import numpy as np
 import time
 import shutil
+import requests as req
 
 
 #Start server:
@@ -16,10 +17,10 @@ import shutil
 
 UPLOAD_FOLDER = join("static","uploads")
 ALLOWED_EXTENSIONS = {'png', 'webp'}
+PBURL = "http://127.0.0.1:8090/api/collections"
 
 app = Flask(__name__, static_url_path="", static_folder="static", template_folder="html")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -32,23 +33,34 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    with open("users.json","r") as f:
-        users = json.loads(f.read())
+    users = req.get(f'{PBURL}/users/records?expand=user_packs(user_id).pack_id').json()["items"]
     for user in users:
+        packs = []
+
+        for entry in user["expand"]["user_packs(user_id)"]:
+            packs.append(entry["expand"]["pack_id"]["name"])
+
         if user_id == user["id"]:
-            return User(user["name"], user["password"], user["role"], user["id"],user["packs"])
+            return User(user["username"], user["email"], user["role"], user["id"], packs)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        with open("users.json", "r") as f:
-            users = json.loads(f.read())
-            verified_user = False
-        for user in users:
-            if request.form["user"] == user["name"]:
-                if request.form["pass"] == user["password"]:
-                    verified_user = User(user["name"], user["password"], user["role"], user["id"],user["packs"])
-                    break
+
+        response = req.post(f'{PBURL}/users/auth-with-password?expand=user_packs(user_id).pack_id',json = {
+            "identity" : request.form["user"],
+            "password" : request.form["pass"]
+        }).json()["record"]
+
+        verified_user = False
+        if "code" not in response:
+            packs = []
+
+            for entry in response["expand"]["user_packs(user_id)"]:
+                packs.append(entry["expand"]["pack_id"]["name"])
+
+            user = response
+            verified_user = User(user["username"], user["email"], user["role"], user["id"],packs)
         
         if verified_user:
             session["user"] = verified_user.__dict__
