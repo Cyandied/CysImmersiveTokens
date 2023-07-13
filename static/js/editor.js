@@ -1,6 +1,6 @@
 async function poster(url, toSend) {
     try {
-        const result = await fetch(`http://127.0.0.1:5000/${url}`, {
+        const result = await fetch(`/${url}`, {
             cache: "no-store",
             method: "POST",
             headers: {
@@ -17,7 +17,7 @@ async function poster(url, toSend) {
 
 async function fetcher(url) {
     try {
-        const result = await fetch(`http://127.0.0.1:5000/${url}`)
+        const result = await fetch(`/${url}`)
         const data = await result.json()
         return data
     } catch (error) {

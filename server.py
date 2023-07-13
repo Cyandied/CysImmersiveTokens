@@ -9,6 +9,7 @@ import numpy as np
 import time
 import shutil
 import requests as req
+from pocketbase import PocketBase
 
 
 #Start server:
@@ -17,7 +18,7 @@ import requests as req
 
 UPLOAD_FOLDER = join("static","uploads")
 ALLOWED_EXTENSIONS = {'png', 'webp'}
-PBURL = "http://127.0.0.1:8090/api/collections"
+client = PocketBase("http://127.0.0.1:8090")
 
 app = Flask(__name__, static_url_path="", static_folder="static", template_folder="html")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -33,47 +34,144 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    users = req.get(f'{PBURL}/users/records?expand=user_packs(user_id).pack_id').json()["items"]
+    users = client.collection("users").get_full_list()
+
     for user in users:
         packs = []
+        games = {}
 
-        for entry in user["expand"]["user_packs(user_id)"]:
-            packs.append(entry["expand"]["pack_id"]["name"])
+        all_user_packs = client.collection("user_packs").get_full_list()
+        all_user_games = client.collection("user_games").get_full_list()
 
-        if user_id == user["id"]:
-            return User(user["username"], user["email"], user["role"], user["id"], packs)
+        for pack in all_user_packs:
+            if pack.user_id == user.id:
+                packs.append(client.collection("packs").get_one(pack.pack_id).name)
+
+        if user.role in ["admin","dm"]:
+            for game in all_user_games:
+                if game.user_id == user.id:
+                    user_game = client.collection("games").get_one(game.game_id)
+                    games[user_game.name] = game.id
+
+        email = None
+        if user.email_visibility:
+            email = user["email"]
+
+        if user_id == user.id:
+            return User(user.username, email, user.role,games, user.id,packs, user.secret)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if "user" in session:
+        if session["user"]:
+            flash(
+                f'Sorry, you are already logged in as {session["user"]["name"]}. Log out first if you wish to log into a different account.'
+            )
+            return redirect(url_for("home"))
     if request.method == "POST":
-
-        response = req.post(f'{PBURL}/users/auth-with-password?expand=user_packs(user_id).pack_id',json = {
-            "identity" : request.form["user"],
-            "password" : request.form["pass"]
-        }).json()["record"]
+        try:
+            response = client.collection("users").auth_with_password(
+                request.form["user"], request.form["pass"]
+            )
+        except:
+            response = "code"
+            flash("Sorry, check if the username and password is correct.")
 
         verified_user = False
-        if "code" not in response:
+        if "code" != response:
+            user = response.record
             packs = []
+            games = {}
 
-            for entry in response["expand"]["user_packs(user_id)"]:
-                packs.append(entry["expand"]["pack_id"]["name"])
+            all_user_packs = client.collection("user_packs").get_full_list()
+            all_user_games = client.collection("user_games").get_full_list()
 
-            user = response
-            verified_user = User(user["username"], user["email"], user["role"], user["id"],packs)
-        
+            for pack in all_user_packs:
+                if pack.user_id == user.id:
+                    packs.append(client.collection("packs").get_one(pack.pack_id).name)
+
+            if user.role in ["admin", "dm"]:
+                for game in all_user_games:
+                    if game.user_id == user.id:
+                        user_game = client.collection("games").get_one(game.game_id)
+                        games[user_game.name] = game.id
+
+            email = None
+            if user.email_visibility:
+                email = user["email"]
+
+            verified_user = User(
+                user.username, email, user.role, games, user.id, packs, user.secret
+            )
+
         if verified_user:
             session["user"] = verified_user.__dict__
             session["hw"] = None
             login_user(verified_user)
             flash(f'sucessfully logged in! Welcome {session["user"]["name"]}')
             return redirect(url_for("home"))
-        
-        else:
-            flash("Sorry, check if the username and password is correct.")
-    
-    
+
     return render_template("index.html")
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    with open(join("static", "ToS.txt"), "r") as f:
+        ToS = f.read()
+    if "user" in session:
+        if session["user"]:
+            flash(
+                f'Sorry, you are already logged in as {session["user"]["name"]}. Log out first if you wish to log into a different account.'
+            )
+            return redirect(url_for("home"))
+
+    data = {"username": "", "email": ""}
+
+    if request.method == "POST":
+        form = request.form
+        if "button" in form:
+            if form["button"] == "sign-up":
+                data = {
+                    "username": form["username"],
+                    "email": form["email"],
+                    "emailVisibility": False,
+                    "password": form["password"],
+                    "passwordConfirm": form["password2"],
+                    "role": form["role"],
+                    "secret": False,
+                }
+
+                try:
+                    record = client.collection("users").create(data)
+                    flash("User sucessfully created! You can now log in!")
+                    return redirect(url_for("login"))
+                except Exception as e:
+                    message = []
+                    users = client.collection("users").get_full_list()
+                    names = []
+                    for user in users:
+                        names.append(user.username)
+                    if form["username"] in names:
+                        message.append("username taken")
+                    email = form["email"].split("@")
+                    if form["password"] != form["password2"]:
+                        message.append("your passwords do not match up")
+                    if len(form["password"]) < 8:
+                        message.append("password too short")
+                    if len(email) == 2:
+                        email = email[1].split(".")
+                        if len(email) != 2:
+                            message.append("email does not have a valid format")
+                    else:
+                        message.append("email does not have a valid format")
+                    flash(
+                        "User not created, follwing errors occured: "
+                        + " :: ".join(message)
+                    )
+
+    return render_template(
+        "signup.html", ToS=ToS, username=data["username"], email=data["email"]
+    )
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -186,11 +284,12 @@ def editor():
 def tutorial():
     path = join("static","images","exsample")
     exampleImages = listdir(path)
-    zIndexes = [5,4,3,1,2,6]
+    zIndexes = [6,5,4,3,2,1]
+    pointTo = ["lines","alpha","alpha","alpha","glowEffect","background"]
     exzs = []
     names = []
     for i, image in enumerate(exampleImages):
-        exzs.append([image, zIndexes[i]])
+        exzs.append([image, zIndexes[i],pointTo[i]])
     
     for html in listdir(join("html","tutorialParts")):
         name = html.split(".")[0]
@@ -222,7 +321,7 @@ def modifyAlpha():
             remove(join(userFolder,pic))
 
     newAlpha = changeColor([alpha],HEXtoRGB([hex]))
-    name = f'{name}_\u221E_{time.time()}.{extention}'
+    name = f'{name}_TEMPORARYFILEDELETETHIS_{time.time()}.{extention}'
     newAlpha[0].save(join(userFolder, name),"PNG")
     return {"new-image":join(userFolder, name).replace("static","")}
 
@@ -244,3 +343,6 @@ def logout():
     session["user"] = None
     session["hw"] = None
     return redirect(url_for("home"))
+
+if __name__ == "__main__":
+    app.run("127.0.0.1", 5000, debug=True)

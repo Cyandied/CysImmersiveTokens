@@ -5,9 +5,11 @@
     <div class="options">
         <input type="file" name="images" multiple>
         <button name="button" value="upload-images">upload images</button>
+        <br>
         <button name="button" value="purge-images">purge</button>
         <button name="button" value="purge-top">purge top</button>
         <button type="button" id="download">download</button>
+        <br>
         <select id="token-pack-selector">
             <option value="all" selected>all token packs</option>
             {% for pack in userpacks %}
@@ -35,6 +37,7 @@
             {% endfor %}
         </select>
         <button name="button" value="load">load</button>
+        <br>
         Dimentions:
         <input type="text" name="h" placeholder="height" value = "{{hw[0]}}"> / <input type="text" name="w" placeholder="width" value = "{{hw[1]}}">
         <button>update</button>

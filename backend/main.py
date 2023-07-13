@@ -4,7 +4,7 @@ from os import remove
 
 def deleteAllModifs(userFolder,file):
     fileTags = file.split("_")
-    if "\u221E" in fileTags:
+    if "TEMPORARYFILEDELETETHIS" in fileTags:
         remove(join(userFolder, file))
 
 def sizeAcceptable(file,mb:int):

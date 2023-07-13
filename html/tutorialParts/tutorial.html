@@ -3,8 +3,7 @@
 <div class="content" style="width: 90%; margin: 0 auto;">
     <div class="images-wrap tutorial">
         {% for image in exz %}
-        {% set name = image[0].split(".")[0].split("_")[1] %}
-        <div data-part="{{name}}" class="tutorial-button tutorial-image inner-image-tutorial collapsed timer400ms" data-layer="{{image[1]}}">
+        <div data-part="{{image[2]}}" class="tutorial-button tutorial-image inner-image-tutorial collapsed timer400ms" data-layer="{{image[1]}}">
             <img src="{{path}}\{{image[0]}}" class="image">
         </div>
         {% endfor %}

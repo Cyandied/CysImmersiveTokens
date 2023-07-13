@@ -322,6 +322,9 @@ form {
     flex-direction: column;
     pointer-events: all !important;
 }
+br {
+    margin: 10px 10px;
+}
 
 .layer-control {
     position: relative;
@@ -330,7 +333,7 @@ form {
     flex-direction: column;
     margin: 0 auto;
     gap: 5px;
-    max-height: 95%;
+    max-height: 90%;
     overflow-y: scroll;
     overflow-x: hidden;
 
@@ -427,6 +430,43 @@ header {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+}
+
+.ToS {
+    background-color: $white;
+    color: $black;
+    text-align: justify;
+    padding: 20px;
+    border-radius: 10px;
+    max-height: 60vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    >span {
+        white-space: pre-wrap;
+    }
+    >button {
+        margin: 5px 0;
+        width: 100%;
+        background-color: $accent2;
+        &:hover {
+            background-color: $accent;
+        }
+    }
+}
+
+.signup-wrap {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
+    >label {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 20px 0 5px 30px;
+    }
+    >button {
+        margin: 20px;
+    }
 }
 
 .loading {
